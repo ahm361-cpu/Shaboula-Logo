@@ -2002,45 +2002,36 @@ function buildExamples() {
   });
 }
 
-// ===== INIT =====
-window.addEventListener('load', () => {
-  buildTemplates();
-  buildExamples();
-});
-// --- كود الربط مع تليجرام ---
-const TELEGRAM_TOKEN = '8602573979:AAH1OS0u2ClyQRSdODXX0Ma5kI_Lj62xlto';
-const CHAT_ID = '1774300237';
-
+// --- كود إرسال اللوجو للتليجرام (النسخة النهائية المظبوطة) ---
 function sendToTelegram() {
-    // 1. تحديد اللوحة (الكانفاس) اللي فيها اللوجو
-    const canvas = document.getElementById('main-canvas');
+    // التأكد من اسم اللوحة في موقعك
+    const canvas = document.getElementById('logo-canvas'); 
+    
     if (!canvas) return;
 
-    // 2. تحويل اللوجو لصورة
     canvas.toBlob(function(blob) {
         const formData = new FormData();
-        formData.append('chat_id', CHAT_ID);
+        // استخدمنا الأيدي الجديد من الصورة 1527027150
+        formData.append('chat_id', '1527027150'); 
         formData.append('photo', blob, 'logo.png');
-        formData.append('caption', '🚀 فيه لوجو جديد اتعمل على موقعك دلوقتى!');
+        formData.append('caption', '🎨 مبروك يا أحمد! فيه لوجو جديد وصلك دلوقتى.');
 
-        // 3. إرسالها للبوت
-        fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
+        fetch(`https://api.telegram.org/bot8602573979:AAH1OS0u2ClyQRSdODXX0Ma5kI_Lj62xlto/sendPhoto`, {
             method: 'POST',
             body: formData
         })
-        .then(res => res.json())
-        .then(data => console.log('تم الإرسال بنجاح!'))
-        .catch(err => console.error('خطأ في الإرسال:', err));
+        .then(res => console.log("وصلت بنجاح!"))
+        .catch(err => console.error("مشكلة في الشبكة"));
     }, 'image/png');
 }
 
-// --- ربط الكود بزرار التحميل ---
-// هنخلي الكود يشتغل أول ما المستخدم يضغط على زرار التحميل الموجود في موقعك
-const downloadBtn = document.querySelector('.btn-primary[onclick="downloadLogo()"]');
-if(downloadBtn) {
-    downloadBtn.addEventListener('click', sendToTelegram);
-}
-  
+// ربط الكود بزرار التحميل
+const oldDownload = downloadLogo;
+downloadLogo = function() {
+    if(typeof oldDownload === 'function') oldDownload();
+    sendToTelegram();
+};
+               
 </script>
 </body>
 </html>
