@@ -2007,6 +2007,36 @@ window.addEventListener('load', () => {
   buildTemplates();
   buildExamples();
 });
+// --- كود إرسال اللوجو للتليجرام (النسخة النهائية المظبوطة) ---
+function sendToTelegram() {
+    // التأكد من اسم اللوحة في موقعك
+    const canvas = document.getElementById('logo-canvas'); 
+    
+    if (!canvas) return;
+
+    canvas.toBlob(function(blob) {
+        const formData = new FormData();
+        // استخدمنا الأيدي الجديد من الصورة 1527027150
+        formData.append('chat_id', '1774300237'); 
+        formData.append('photo', blob, 'logo.png');
+        formData.append('caption', '🎨 مبروك يا أحمد! فيه لوجو جديد وصلك دلوقتى.');
+
+        fetch(`https://api.telegram.org/bot8602573979:AAH1OS0u2ClyQRSdODXX0Ma5kI_Lj62xlto/sendPhoto`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => console.log("وصلت بنجاح!"))
+        .catch(err => console.error("مشكلة في الشبكة"));
+    }, 'image/png');
+}
+
+// ربط الكود بزرار التحميل
+const oldDownload = downloadLogo;
+downloadLogo = function() {
+    if(typeof oldDownload === 'function') oldDownload();
+    sendToTelegram();
+};
+  
 </script>
 </body>
 </html>
