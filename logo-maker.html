@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogoCraft | صانع اللوجو الاحترافي</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cairo:wght@300;400;600;700;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #8B6914;
+    --gold-glow: rgba(201,168,76,0.25);
+    --black: #050505;
+    --dark: #0D0D0D;
+    --dark2: #141414;
+    --dark3: #1C1C1C;
+    --text: #F0E6C8;
+    --text-muted: #8A7A5A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── Noise Overlay ─── */
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events:none;
+    z-index:9999;
+    opacity:.4;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    padding: 40px 20px;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(201,168,76,0.06) 0%, transparent 60%),
+                var(--black);
+  }
+
+  .hero::after {
+    content:'';
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* Animated corner decorations */
+  .corner { position:absolute; width:80px; height:80px; }
+  .corner::before, .corner::after { content:''; position:absolute; background:var(--gold); }
+  .corner::before { width:100%; height:2px; }
+  .corner::after { width:2px; height:100%; }
+  .corner-tl { top:30px; right:30px; }
+  .corner-br { bottom:30px; left:30px; transform:rotate(180deg); }
+
+  .lang-toggle {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .lang-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--gold-dark);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .lang-btn.active, .lang-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 20px;
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: fadeDown .8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(48px, 10vw, 100px);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #E8C96A 0%, #C9A84C 40%, #8B6914 70%, #C9A84C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeDown .9s ease both .1s;
+  }
+
+  .hero-subtitle-ar {
+    font-family: 'Cairo', sans-serif;
+    font-size: clamp(20px, 4vw, 32px);
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    animation: fadeDown .9s ease both .2s;
+  }
+
+  .hero-desc {
+    max-width: 560px;
+    font-size: 15px;
+    color: #6B5E40;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    animation: fadeDown .9s ease both .3s;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: all .3s;
+    animation: fadeDown .9s ease both .4s;
+    text-decoration: none;
+  }
+  .hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 50px rgba(201,168,76,0.4);
+  }
+
+  /* ─── Stats ─── */
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 50px 20px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    flex-wrap: wrap;
+  }
+  .stat { text-align:center; }
+  .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 36px;
+    color: var(--gold);
+    font-weight:900;
+  }
+  .stat-label { font-size:13px; color:var(--text-muted); margin-top:4px; }
+
+  /* ─── Builder Section ─── */
+  .builder-section {
+    padding: 80px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .section-title h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .section-title p { color: var(--text-muted); font-size:15px; }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-divider::before, .section-divider::after {
+    content:'';
+    flex:1;
+    max-width:200px;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dark));
+  }
+  .section-divider::after { background: linear-gradient(90deg, var(--gold-dark), transparent); }
+  .section-divider span { color:var(--gold); font-size:20px; }
+
+  .builder-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  @media(max-width:900px) { .builder-grid { grid-template-columns:1fr; } }
+
+  .panel {
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .panel::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-title::before {
+    content:'';
+    width:4px; height:18px;
+    background: var(--gold);
+  }
+
+  /* ─── Form Controls ─── */
+  label { display:block; font-size:13px; color:var(--text-muted); margin-bottom:8px; margin-top:18px; }
+  label:first-of-type { margin-top:0; }
+
+  input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .3s;
+  }
+  input[type=text]:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+  }
+  textarea { resize: vertical; min-height:80px; }
+  select { appearance:none; cursor:pointer; }
+  select option { background: var(--dark); }
+
+  .color-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+  .color-chip {
+    width:36px; height:36px;
+    border-radius:50%;
+    cursor:pointer;
+    border:3px solid transparent;
+    transition:all .2s;
+    position:relative;
+  }
+  .color-chip.active, .color-chip:hover {
+    border-color: var(--gold);
+    transform: scale(1.15);
+  }
+  .color-chip input { opacity:0; position:absolute; inset:0; cursor:pointer; width:100%; height:100%; border-radius:50%; }
+
+  .font-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px; }
+  .font-chip {
+    padding: 10px 6px;
+    background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.15);
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all .2s;
+    color: var(--text);
+  }
+  .font-chip.active, .font-chip:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.07);
+  }
+
+  /* ─── Logo Preview ─── */
+  .preview-wrap {
+    background: var(--dark);
+    border: 1px solid rgba(201,168,76,0.1);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  .preview-bg-dots {
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(201,168,76,0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  #logoCanvas {
+    position: relative;
+    z-index: 2;
+    max-width: 100%;
+  }
+
+  .preview-actions {
+    display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;
+  }
+  .btn {
+    flex:1;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all .3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+  }
+  .btn-gold:hover { box-shadow: 0 8px 30px rgba(201,168,76,0.35); transform:translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-dark);
+  }
+  .btn-outline:hover { background: rgba(201,168,76,0.1); }
+
+  /* ─── Templates Section ─── */
+  .templates-section {
+    padding: 80px 20px;
+    background: var(--dark2);
+    border-top: 1px solid rgba(201,168,76,0.08);
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .template-card {
+    background: var(--dark);
+    border: 1px solid rgba(201,168,76,0.12);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .3s;
+    position: relative;
+    group: true;
+  }
+  .template-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(201,168,76,0.3);
+  }
+  .template-card::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
+    opacity:0; transition:.3s;
+  }
+  .template-card:hover::before { opacity:1; }
+
+  .template-preview {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .template-info {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .template-name { font-weight:700; font-size:14px; color:var(--text); }
+  .template-tag {
+    font-size:11px; padding:3px 10px;
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .template-use {
+    position:absolute; inset:0;
+    background: rgba(0,0,0,0.75);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:.3s;
+    font-weight:700; color:var(--gold);
+    font-size:15px; gap:8px;
+  }
+  .template-card:hover .template-use { opacity:1; }
+
+  /* ─── Footer ─── */
+  footer {
+    padding: 50px 20px 30px;
+    background: var(--black);
+    border-top: 1px solid rgba(201,168,76,0.1);
+    text-align:center;
+  }
+  .footer-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .footer-links {
+    display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+    margin-bottom:30px;
+  }
+  .footer-links a {
+    color: var(--text-muted); font-size:13px; text-decoration:none;
+    transition:.2s;
+  }
+  .footer-links a:hover { color:var(--gold); }
+
+  .footer-brand {
+    display:flex; align-items:center; justify-content:center;
+    gap:14px; margin-bottom:20px; flex-wrap:wrap;
+  }
+  .footer-brand-logo {
+    width:52px; height:52px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cinzel',serif; font-weight:900; color:var(--black); font-size:18px;
+  }
+  .footer-brand-text { text-align:right; }
+  .footer-brand-text strong { display:block; font-size:15px; color:var(--text); }
+  .footer-brand-text span { font-size:12px; color:var(--text-muted); }
+
+  .footer-social {
+    display:flex; gap:14px; justify-content:center; margin-bottom:24px;
+  }
+  .social-btn {
+    width:42px; height:42px;
+    border:1px solid rgba(201,168,76,0.25);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-muted); font-size:18px; text-decoration:none;
+    transition:all .3s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .social-btn:hover {
+    border-color:var(--gold); color:var(--gold);
+    background:rgba(201,168,76,0.1);
+  }
+  .footer-copy { font-size:12px; color:#3A3020; }
+  .supervision {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 20px;
+    border:1px solid rgba(201,168,76,0.2);
+    color:var(--text-muted); font-size:13px;
+    margin-bottom:20px;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .supervision span { color:var(--gold); font-weight:700; }
+
+  /* ─── Icon styles (emoji-based, no lib needed) ─── */
+  .icon { font-size:20px; }
+
+  /* ─── Animations ─── */
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes shimmer {
+    0%,100% { opacity:.6; } 50% { opacity:1; }
+  }
+
+  /* ─── Slider control ─── */
+  input[type=range] {
+    width:100%; accent-color:var(--gold); margin-top:8px; cursor:pointer;
+  }
+
+  /* ─── Shape picker ─── */
+  .shape-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:10px; }
+  .shape-chip {
+    aspect-ratio:1; background:var(--dark3);
+    border:1px solid rgba(201,168,76,0.15);
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; cursor:pointer; transition:.2s;
+  }
+  .shape-chip.active, .shape-chip:hover {
+    border-color:var(--gold); background:rgba(201,168,76,0.07);
+  }
+
+  /* ─── Effect picker ─── */
+  .effect-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+  .effect-chip {
+    padding:10px 6px; text-align:center; font-size:12px;
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.15);
+    cursor:pointer; transition:.2s; color:var(--text-muted);
+  }
+  .effect-chip.active, .effect-chip:hover {
+    border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.07);
+  }
+
+  /* Responsive */
+  @media(max-width:600px) {
+    .corner { width:50px; height:50px; }
+    .lang-toggle { top:16px; left:16px; }
+    .font-grid { grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* ─── Tabs ─── */
+  .tabs { display:flex; gap:0; margin-bottom:24px; }
+  .tab {
+    flex:1; padding:11px; text-align:center; font-size:13px; font-weight:700;
+    cursor:pointer; border-bottom:2px solid rgba(201,168,76,0.15);
+    color:var(--text-muted); transition:.2s;
+  }
+  .tab.active {
+    border-color:var(--gold); color:var(--gold);
+    background:rgba(201,168,76,0.04);
+  }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  .size-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+  .size-chip {
+    padding:8px; text-align:center; font-size:11px;
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.15);
+    cursor:pointer; transition:.2s; color:var(--text-muted);
+  }
+  .size-chip.active, .size-chip:hover {
+    border-color:var(--gold); color:var(--gold);
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="hero-badge">
+    <span>✦</span>
+    <span data-ar="مجاني 100% — بدون قيود" data-en="100% Free — No Restrictions">مجاني 100% — بدون قيود</span>
+    <span>✦</span>
+  </div>
+
+  <h1 class="hero-title">LogoCraft</h1>
+  <p class="hero-subtitle-ar" data-ar="صانع اللوجو الاحترافي" data-en="Professional Logo Maker">صانع اللوجو الاحترافي</p>
+  <p class="hero-desc" data-ar="أنشئ لوجو احترافياً في ثوانٍ — بدون مصمم، بدون دفع، بدون تعقيد. أكثر من ٥٠ قالب حصري جاهز للتخصيص." data-en="Create a professional logo in seconds — no designer, no payment, no complexity. 50+ exclusive templates ready to customize.">
+    أنشئ لوجو احترافياً في ثوانٍ — بدون مصمم، بدون دفع، بدون تعقيد. أكثر من ٥٠ قالب حصري جاهز للتخصيص.
+  </p>
+  <a href="#builder" class="hero-cta">
+    <span>✦</span>
+    <span data-ar="ابدأ تصميمك الآن" data-en="Start Designing Now">ابدأ تصميمك الآن</span>
+    <span>↓</span>
+  </a>
+</section>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">+50</div><div class="stat-label" data-ar="قالب احترافي" data-en="Pro Templates">قالب احترافي</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label" data-ar="تصميم مجاني" data-en="Free Designs">تصميم مجاني</div></div>
+  <div class="stat"><div class="stat-num">SVG</div><div class="stat-label" data-ar="تصدير عالي الجودة" data-en="High Quality Export">تصدير عالي الجودة</div></div>
+  <div class="stat"><div class="stat-num">RTL</div><div class="stat-label" data-ar="دعم العربية" data-en="Arabic Support">دعم العربية</div></div>
+</div>
+
+<!-- Builder -->
+<section class="builder-section" id="builder">
+  <div class="section-title">
+    <div class="section-divider"><span>✦</span></div>
+    <h2 data-ar="منشئ اللوجو" data-en="Logo Builder">منشئ اللوجو</h2>
+    <p data-ar="خصص كل تفصيلة في لوجو احترافي" data-en="Customize every detail of a professional logo">خصص كل تفصيلة في لوجو احترافي</p>
+  </div>
+
+  <div class="builder-grid">
+
+    <!-- Controls -->
+    <div class="panel">
+      <div class="panel-title" data-ar="⚙ إعدادات اللوجو" data-en="⚙ Logo Settings">⚙ إعدادات اللوجو</div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('text')" data-ar="النص" data-en="Text">النص</div>
+        <div class="tab" onclick="switchTab('style')" data-ar="الستايل" data-en="Style">الستايل</div>
+        <div class="tab" onclick="switchTab('layout')" data-ar="التخطيط" data-en="Layout">التخطيط</div>
+      </div>
+
+      <!-- Tab: Text -->
+      <div class="tab-content active" id="tab-text">
+        <label data-ar="اسم الشركة / العلامة التجارية" data-en="Company / Brand Name">اسم الشركة / العلامة التجارية</label>
+        <input type="text" id="logoText" value="شركتك" oninput="renderLogo()" placeholder="اكتب اسمك هنا...">
+
+        <label data-ar="شعار / سلوجان (اختياري)" data-en="Tagline (optional)">شعار / سلوجان (اختياري)</label>
+        <input type="text" id="taglineText" value="صنع باحتراف" oninput="renderLogo()">
+
+        <label data-ar="رمز / أيقونة" data-en="Symbol / Icon">رمز / أيقونة</label>
+        <div class="shape-grid" id="iconGrid">
+          <div class="shape-chip active" onclick="pickIcon(this,'⬡')">⬡</div>
+          <div class="shape-chip" onclick="pickIcon(this,'★')">★</div>
+          <div class="shape-chip" onclick="pickIcon(this,'◆')">◆</div>
+          <div class="shape-chip" onclick="pickIcon(this,'⚜')">⚜</div>
+          <div class="shape-chip" onclick="pickIcon(this,'🔷')">🔷</div>
+          <div class="shape-chip" onclick="pickIcon(this,'⚡')">⚡</div>
+          <div class="shape-chip" onclick="pickIcon(this,'🦁')">🦁</div>
+          <div class="shape-chip" onclick="pickIcon(this,'👑')">👑</div>
+          <div class="shape-chip" onclick="pickIcon(this,'🔥')">🔥</div>
+          <div class="shape-chip" onclick="pickIcon(this,'💎')">💎</div>
+          <div class="shape-chip" onclick="pickIcon(this,'🏛')">🏛</div>
+          <div class="shape-chip" onclick="pickIcon(this,'🌙')">🌙</div>
+          <div class="shape-chip" onclick="pickIcon(this,'⚔')">⚔</div>
+          <div class="shape-chip" onclick="pickIcon(this,'🌿')">🌿</div>
+          <div class="shape-chip" onclick="pickIcon(this,'⭕')">⭕</div>
+        </div>
+      </div>
+
+      <!-- Tab: Style -->
+      <div class="tab-content" id="tab-style">
+        <label data-ar="الخط" data-en="Font">الخط</label>
+        <div class="font-grid" id="fontGrid">
+          <div class="font-chip active" style="font-family:'Cairo'" onclick="pickFont(this,'Cairo')">Cairo</div>
+          <div class="font-chip" style="font-family:'Playfair Display'" onclick="pickFont(this,'Playfair Display')">Playfair</div>
+          <div class="font-chip" style="font-family:'Cinzel'" onclick="pickFont(this,'Cinzel')">Cinzel</div>
+          <div class="font-chip" style="font-family:'Georgia'" onclick="pickFont(this,'Georgia')">Georgia</div>
+          <div class="font-chip" style="font-family:'Arial Black'" onclick="pickFont(this,'Arial Black')">Impact</div>
+          <div class="font-chip" style="font-family:'Courier New'" onclick="pickFont(this,'Courier New')">Mono</div>
+        </div>
+
+        <label data-ar="لون الخط" data-en="Text Color">لون الخط</label>
+        <div class="color-row" id="textColorRow">
+          <div class="color-chip active" style="background:#C9A84C" onclick="pickTextColor(this,'#C9A84C')"></div>
+          <div class="color-chip" style="background:#FFFFFF" onclick="pickTextColor(this,'#FFFFFF')"></div>
+          <div class="color-chip" style="background:#E8C96A" onclick="pickTextColor(this,'#E8C96A')"></div>
+          <div class="color-chip" style="background:#4CAF9A" onclick="pickTextColor(this,'#4CAF9A')"></div>
+          <div class="color-chip" style="background:#6B9AC4" onclick="pickTextColor(this,'#6B9AC4')"></div>
+          <div class="color-chip" style="background:#C4736B" onclick="pickTextColor(this,'#C4736B')"></div>
+          <div class="color-chip" style="background:#A084C4" onclick="pickTextColor(this,'#A084C4')"></div>
+          <div class="color-chip" style="background:#F5F5DC" onclick="pickTextColor(this,'#F5F5DC')"></div>
+        </div>
+
+        <label data-ar="لون الخلفية" data-en="Background Color">لون الخلفية</label>
+        <div class="color-row" id="bgColorRow">
+          <div class="color-chip active" style="background:#0D0D0D;border:1px solid #444" onclick="pickBgColor(this,'#0D0D0D')"></div>
+          <div class="color-chip" style="background:#1A1A2E" onclick="pickBgColor(this,'#1A1A2E')"></div>
+          <div class="color-chip" style="background:#0A1628" onclick="pickBgColor(this,'#0A1628')"></div>
+          <div class="color-chip" style="background:#1C0A00" onclick="pickBgColor(this,'#1C0A00')"></div>
+          <div class="color-chip" style="background:#FFFFFF;border:1px solid #444" onclick="pickBgColor(this,'#FFFFFF')"></div>
+          <div class="color-chip" style="background:transparent;border:2px dashed #555" onclick="pickBgColor(this,'transparent')">✕</div>
+        </div>
+
+        <label data-ar="تأثيرات بصرية" data-en="Visual Effects">تأثيرات بصرية</label>
+        <div class="effect-grid" id="effectGrid">
+          <div class="effect-chip active" onclick="pickEffect(this,'none')" data-ar="بدون" data-en="None">بدون</div>
+          <div class="effect-chip" onclick="pickEffect(this,'shadow')" data-ar="ظل" data-en="Shadow">ظل</div>
+          <div class="effect-chip" onclick="pickEffect(this,'glow')" data-ar="توهج" data-en="Glow">توهج</div>
+          <div class="effect-chip" onclick="pickEffect(this,'gradient')" data-ar="تدرج" data-en="Gradient">تدرج</div>
+          <div class="effect-chip" onclick="pickEffect(this,'outline')" data-ar="إطار" data-en="Outline">إطار</div>
+          <div class="effect-chip" onclick="pickEffect(this,'3d')" data-ar="ثلاثي" data-en="3D">ثلاثي</div>
+        </div>
+
+        <label data-ar="حجم النص" data-en="Text Size">حجم النص: <span id="sizeVal">48</span>px</label>
+        <input type="range" min="24" max="90" value="48" id="textSize" oninput="document.getElementById('sizeVal').textContent=this.value; renderLogo()">
+      </div>
+
+      <!-- Tab: Layout -->
+      <div class="tab-content" id="tab-layout">
+        <label data-ar="شكل الإطار" data-en="Frame Shape">شكل الإطار</label>
+        <div class="shape-grid" id="frameGrid">
+          <div class="shape-chip active" onclick="pickFrame(this,'none')" data-ar="بدون" data-en="None">∅</div>
+          <div class="shape-chip" onclick="pickFrame(this,'circle')">⬤</div>
+          <div class="shape-chip" onclick="pickFrame(this,'rect')">▬</div>
+          <div class="shape-chip" onclick="pickFrame(this,'diamond')">◆</div>
+          <div class="shape-chip" onclick="pickFrame(this,'hex')">⬡</div>
+          <div class="shape-chip" onclick="pickFrame(this,'arch')">⌒</div>
+          <div class="shape-chip" onclick="pickFrame(this,'shield')">⬟</div>
+          <div class="shape-chip" onclick="pickFrame(this,'badge')">✦</div>
+          <div class="shape-chip" onclick="pickFrame(this,'double-line')">≡</div>
+          <div class="shape-chip" onclick="pickFrame(this,'ornate')">❋</div>
+        </div>
+
+        <label data-ar="حجم اللوجو" data-en="Logo Size">حجم اللوجو</label>
+        <div class="size-row" id="sizeGrid">
+          <div class="size-chip active" onclick="pickSize(this,320)">صغير<br>320px</div>
+          <div class="size-chip" onclick="pickSize(this,480)">متوسط<br>480px</div>
+          <div class="size-chip" onclick="pickSize(this,640)">كبير<br>640px</div>
+        </div>
+
+        <label data-ar="موضع الأيقونة" data-en="Icon Position">موضع الأيقونة</label>
+        <div class="shape-grid" id="iconPosGrid">
+          <div class="shape-chip active" onclick="pickIconPos(this,'top')" data-ar="فوق" data-en="Top">↑</div>
+          <div class="shape-chip" onclick="pickIconPos(this,'left')" data-ar="يسار" data-en="Left">←</div>
+          <div class="shape-chip" onclick="pickIconPos(this,'right')" data-ar="يمين" data-en="Right">→</div>
+          <div class="shape-chip" onclick="pickIconPos(this,'hidden')" data-ar="إخفاء" data-en="Hide">✕</div>
+        </div>
+
+        <label data-ar="مسافة بين العناصر" data-en="Spacing">مسافة بين العناصر: <span id="spacingVal">16</span>px</label>
+        <input type="range" min="4" max="40" value="16" id="spacing" oninput="document.getElementById('spacingVal').textContent=this.value; renderLogo()">
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="panel">
+      <div class="panel-title" data-ar="👁 معاينة اللوجو" data-en="👁 Logo Preview">👁 معاينة اللوجو</div>
+      <div class="preview-wrap">
+        <div class="preview-bg-dots"></div>
+        <canvas id="logoCanvas" width="480" height="280"></canvas>
+      </div>
+      <div class="preview-actions">
+        <button class="btn btn-gold" onclick="downloadPNG()" data-ar="⬇ تحميل PNG" data-en="⬇ Download PNG">⬇ تحميل PNG</button>
+        <button class="btn btn-outline" onclick="downloadSVG()" data-ar="⬇ تحميل SVG" data-en="⬇ Download SVG">⬇ تحميل SVG</button>
+        <button class="btn btn-outline" onclick="randomize()" data-ar="🎲 عشوائي" data-en="🎲 Random">🎲 عشوائي</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Templates -->
+<section class="templates-section" id="templates">
+  <div class="section-title">
+    <div class="section-divider"><span>✦</span></div>
+    <h2 data-ar="قوالب احترافية" data-en="Professional Templates">قوالب احترافية</h2>
+    <p data-ar="اختر قالباً واضغط عليه لتطبيقه فوراً" data-en="Choose a template and click to apply it instantly">اختر قالباً واضغط عليه لتطبيقه فوراً</p>
+  </div>
+  <div class="templates-grid" id="templatesGrid"></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">LogoCraft</div>
+
+  <div class="footer-links">
+    <a href="#" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+    <a href="#builder" data-ar="المنشئ" data-en="Builder">المنشئ</a>
+    <a href="#templates" data-ar="القوالب" data-en="Templates">القوالب</a>
+    <a href="#" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a>
+  </div>
+
+  <div class="footer-brand">
+    <div class="footer-brand-logo">AS</div>
+    <div class="footer-brand-text">
+      <strong data-ar="أحمد سلام" data-en="Ahmed Sallam">أحمد سلام</strong>
+      <span data-ar="مطور ومصمم محترف" data-en="Professional Developer & Designer">مطور ومصمم محترف</span>
+    </div>
+  </div>
+
+  <div class="supervision">
+    <span>✦</span>
+    <span data-ar="تحت إشراف" data-en="Under Supervision of">تحت إشراف</span>
+    <span>·</span>
+    <span>أحمد سلام</span>
+  </div>
+
+  <div class="footer-social">
+    <a class="social-btn" href="https://www.linkedin.com/in/ahmed-sallam-6053313b9" target="_blank" title="LinkedIn">in</a>
+    <a class="social-btn" href="https://wa.me/201033318581" target="_blank" title="WhatsApp">💬</a>
+  </div>
+
+  <p class="footer-copy">© 2025 LogoCraft · <span data-ar="جميع الحقوق محفوظة" data-en="All Rights Reserved">جميع الحقوق محفوظة</span> · <span data-ar="صُنع بـ ❤" data-en="Made with ❤">صُنع بـ ❤</span></p>
+</footer>
+
+<script>
+// ──────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────
+const state = {
+  text: 'شركتك',
+  tagline: 'صنع باحتراف',
+  icon: '⬡',
+  font: 'Cairo',
+  textColor: '#C9A84C',
+  bgColor: '#0D0D0D',
+  effect: 'none',
+  textSize: 48,
+  frame: 'none',
+  canvasW: 480,
+  canvasH: 280,
+  iconPos: 'top',
+  spacing: 16
+};
+
+// ──────────────────────────────────────────────
+// Tabs
+// ──────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const ids=['text','style','layout'];
+    t.classList.toggle('active', ids[i]===id);
+  });
+  document.querySelectorAll('.tab-content').forEach(c=>{
+    c.classList.toggle('active', c.id==='tab-'+id);
+  });
+}
+
+// ──────────────────────────────────────────────
+// Pickers
+// ──────────────────────────────────────────────
+function pickIcon(el, val) {
+  document.querySelectorAll('#iconGrid .shape-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.icon=val; renderLogo();
+}
+function pickFont(el, val) {
+  document.querySelectorAll('#fontGrid .font-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.font=val; renderLogo();
+}
+function pickTextColor(el, val) {
+  document.querySelectorAll('#textColorRow .color-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.textColor=val; renderLogo();
+}
+function pickBgColor(el, val) {
+  document.querySelectorAll('#bgColorRow .color-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.bgColor=val; renderLogo();
+}
+function pickEffect(el, val) {
+  document.querySelectorAll('#effectGrid .effect-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.effect=val; renderLogo();
+}
+function pickFrame(el, val) {
+  document.querySelectorAll('#frameGrid .shape-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.frame=val; renderLogo();
+}
+function pickSize(el, val) {
+  document.querySelectorAll('#sizeGrid .size-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  state.canvasW = val; state.canvasH = Math.round(val*0.583);
+  const canvas = document.getElementById('logoCanvas');
+  canvas.width = state.canvasW; canvas.height = state.canvasH;
+  renderLogo();
+}
+function pickIconPos(el, val) {
+  document.querySelectorAll('#iconPosGrid .shape-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); state.iconPos=val; renderLogo();
+}
+
+// ──────────────────────────────────────────────
+// Canvas Render
+// ──────────────────────────────────────────────
+function renderLogo() {
+  state.text = document.getElementById('logoText').value || 'Logo';
+  state.tagline = document.getElementById('taglineText').value;
+  state.textSize = parseInt(document.getElementById('textSize').value);
+  state.spacing = parseInt(document.getElementById('spacing').value);
+
+  const canvas = document.getElementById('logoCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Background
+  if (state.bgColor !== 'transparent') {
+    ctx.fillStyle = state.bgColor;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  // Frame
+  drawFrame(ctx, W, H);
+
+  // Arrange
+  const iconSize = state.textSize * 1.1;
+  const textY_base = H/2;
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Apply effect
+  applyEffect(ctx);
+
+  if (state.iconPos === 'top') {
+    // Icon top, text below
+    const totalH = iconSize + state.spacing + state.textSize + (state.tagline ? state.spacing*0.8 + 20 : 0);
+    let y = (H - totalH)/2 + iconSize/2;
+    drawIcon(ctx, W/2, y, iconSize);
+    y += iconSize/2 + state.spacing + state.textSize/2;
+    drawText(ctx, state.text, W/2, y, state.textSize);
+    if (state.tagline) drawTagline(ctx, state.tagline, W/2, y + state.textSize/2 + state.spacing*0.8);
+  } else if (state.iconPos === 'left') {
+    const textX = W/2 + iconSize*0.6;
+    const iconX = W/2 - state.textSize*1.2;
+    drawIcon(ctx, iconX, H/2, iconSize);
+    drawText(ctx, state.text, textX, state.tagline ? H/2 - 14 : H/2, state.textSize);
+    if (state.tagline) drawTagline(ctx, state.tagline, textX, H/2 + 18);
+  } else if (state.iconPos === 'right') {
+    const textX = W/2 - iconSize*0.6;
+    const iconX = W/2 + state.textSize*1.2;
+    drawIcon(ctx, iconX, H/2, iconSize);
+    drawText(ctx, state.text, textX, state.tagline ? H/2 - 14 : H/2, state.textSize);
+    if (state.tagline) drawTagline(ctx, state.tagline, textX, H/2 + 18);
+  } else {
+    // hidden icon
+    drawText(ctx, state.text, W/2, state.tagline ? H/2 - 16 : H/2, state.textSize);
+    if (state.tagline) drawTagline(ctx, state.tagline, W/2, H/2 + state.textSize*0.6);
+  }
+
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+}
+
+function applyEffect(ctx) {
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+  if (state.effect==='shadow') { ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=12; ctx.shadowOffsetX=4; ctx.shadowOffsetY=4; }
+  if (state.effect==='glow') { ctx.shadowColor=state.textColor; ctx.shadowBlur=22; }
+  if (state.effect==='3d') { ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=0; ctx.shadowOffsetX=3; ctx.shadowOffsetY=3; }
+}
+
+function drawText(ctx, text, x, y, size) {
+  ctx.font = `900 ${size}px '${state.font}', Cairo, serif`;
+  if (state.effect==='gradient') {
+    const grd = ctx.createLinearGradient(x-120, y-size/2, x+120, y+size/2);
+    grd.addColorStop(0, '#E8C96A');
+    grd.addColorStop(0.5, state.textColor);
+    grd.addColorStop(1, '#8B6914');
+    ctx.fillStyle = grd;
+  } else if (state.effect==='outline') {
+    ctx.strokeStyle = state.textColor;
+    ctx.lineWidth = 2;
+    ctx.strokeText(text, x, y);
+    ctx.fillStyle = 'transparent';
+  } else {
+    ctx.fillStyle = state.textColor;
+  }
+  if (state.effect !== 'outline') ctx.fillText(text, x, y);
+}
+
+function drawTagline(ctx, text, x, y) {
+  ctx.font = `400 14px 'Cairo', sans-serif`;
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.shadowBlur=0; ctx.shadowColor='transparent';
+  ctx.fillText(text, x, y);
+}
+
+function drawIcon(ctx, x, y, size) {
+  ctx.font = `${size}px serif`;
+  ctx.fillStyle = state.textColor;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(state.icon, x, y);
+}
+
+function drawFrame(ctx, W, H) {
+  if (state.frame==='none') return;
+  const cx=W/2, cy=H/2, rx=W*0.44, ry=H*0.44;
+  ctx.strokeStyle = state.textColor;
+  ctx.lineWidth = 2;
+  ctx.shadowColor='transparent';
+
+  if (state.frame==='circle') {
+    ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2); ctx.stroke();
+  } else if (state.frame==='rect') {
+    ctx.strokeRect(cx-rx, cy-ry, rx*2, ry*2);
+  } else if (state.frame==='diamond') {
+    ctx.beginPath(); ctx.moveTo(cx,cy-ry); ctx.lineTo(cx+rx,cy); ctx.lineTo(cx,cy+ry); ctx.lineTo(cx-rx,cy); ctx.closePath(); ctx.stroke();
+  } else if (state.frame==='hex') {
+    ctx.beginPath();
+    for(let i=0;i<6;i++) {
+      const a = Math.PI/180*(60*i-30);
+      i===0 ? ctx.moveTo(cx+rx*Math.cos(a), cy+ry*Math.sin(a)) : ctx.lineTo(cx+rx*Math.cos(a), cy+ry*Math.sin(a));
+    }
+    ctx.closePath(); ctx.stroke();
+  } else if (state.frame==='double-line') {
+    ctx.strokeRect(cx-rx, cy-ry, rx*2, ry*2);
+    ctx.strokeRect(cx-rx+6, cy-ry+6, rx*2-12, ry*2-12);
+  } else if (state.frame==='ornate') {
+    ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx,cy,rx*0.85,ry*0.85,0,0,Math.PI*2); ctx.stroke();
+  } else if (state.frame==='badge') {
+    ctx.beginPath();
+    const pts=12, outer=rx, inner=rx*0.8;
+    for(let i=0;i<pts*2;i++) {
+      const a=Math.PI/pts*i - Math.PI/2;
+      const r = i%2===0 ? outer : inner;
+      i===0 ? ctx.moveTo(cx+r*Math.cos(a), cy+r*Math.sin(a)*ry/rx) : ctx.lineTo(cx+r*Math.cos(a), cy+r*Math.sin(a)*ry/rx);
+    }
+    ctx.closePath(); ctx.stroke();
+  } else if (state.frame==='shield') {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy-ry); ctx.lineTo(cx+rx, cy-ry*0.4); ctx.lineTo(cx+rx*0.8, cy+ry*0.5);
+    ctx.lineTo(cx, cy+ry); ctx.lineTo(cx-rx*0.8, cy+ry*0.5); ctx.lineTo(cx-rx, cy-ry*0.4);
+    ctx.closePath(); ctx.stroke();
+  } else if (state.frame==='arch') {
+    ctx.beginPath(); ctx.arc(cx,cy,rx*0.9,Math.PI,0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-rx*0.9,cy); ctx.lineTo(cx-rx*0.9,cy+ry*0.6); ctx.lineTo(cx+rx*0.9,cy+ry*0.6); ctx.lineTo(cx+rx*0.9,cy); ctx.stroke();
+  }
+}
+
+// ──────────────────────────────────────────────
+// Download
+// ──────────────────────────────────────────────
+function downloadPNG() {
+  const canvas = document.getElementById('logoCanvas');
+  const a = document.createElement('a');
+  a.download = 'logo.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+function downloadSVG() {
+  const text = state.text;
+  const tagline = state.tagline;
+  const W = state.canvasW, H = state.canvasH;
+  const bg = state.bgColor==='transparent' ? '' : `<rect width="${W}" height="${H}" fill="${state.bgColor}"/>`;
+  const icon = state.iconPos!=='hidden' ? `<text x="${W/2}" y="${H*0.35}" font-size="${state.textSize*1.1}" text-anchor="middle" dominant-baseline="middle">${state.icon}</text>` : '';
+  const mainY = state.iconPos==='top' ? H*0.62 : H/2;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${bg}${icon}<text x="${W/2}" y="${mainY}" font-family="${state.font}" font-weight="900" font-size="${state.textSize}" fill="${state.textColor}" text-anchor="middle" dominant-baseline="middle">${text}</text><text x="${W/2}" y="${mainY+state.textSize*0.7}" font-family="Cairo" font-size="14" fill="rgba(201,168,76,0.55)" text-anchor="middle">${tagline}</text></svg>`;
+  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const a = document.createElement('a');
+  a.download = 'logo.svg';
+  a.href = URL.createObjectURL(blob);
+  a.click();
+}
+
+// ──────────────────────────────────────────────
+// Randomize
+// ──────────────────────────────────────────────
+const icons = ['⬡','★','◆','⚜','⚡','👑','💎','🔥','🌙','⚔','🏛','🌿'];
+const fonts = ['Cairo','Playfair Display','Cinzel','Georgia','Arial Black'];
+const colors = ['#C9A84C','#E8C96A','#4CAF9A','#6B9AC4','#C4736B','#A084C4','#F5F5DC'];
+const effects = ['none','shadow','glow','gradient','3d'];
+const frames = ['none','circle','rect','diamond','hex','badge','shield'];
+
+function randomize() {
+  state.icon = icons[Math.floor(Math.random()*icons.length)];
+  state.font = fonts[Math.floor(Math.random()*fonts.length)];
+  state.textColor = colors[Math.floor(Math.random()*colors.length)];
+  state.effect = effects[Math.floor(Math.random()*effects.length)];
+  state.frame = frames[Math.floor(Math.random()*frames.length)];
+  renderLogo();
+}
+
+// ──────────────────────────────────────────────
+// Templates
+// ──────────────────────────────────────────────
+const templates = [
+  { name:'Classic Gold', nameAr:'الذهبي الكلاسيكي', cat:'فاخر', bg:'#0D0D0D', color:'#C9A84C', font:'Cinzel', icon:'⬡', effect:'glow', frame:'double-line', iconPos:'top' },
+  { name:'Royal Badge', nameAr:'الشارة الملكية', cat:'ملكي', bg:'#0A1628', color:'#E8C96A', font:'Playfair Display', icon:'👑', effect:'gradient', frame:'badge', iconPos:'top' },
+  { name:'Tech Bold', nameAr:'التقني الجريء', cat:'تقني', bg:'#0D0D0D', color:'#4CAF9A', font:'Arial Black', icon:'⚡', effect:'glow', frame:'hex', iconPos:'left' },
+  { name:'Diamond Cut', nameAr:'الألماسي', cat:'فاخر', bg:'#1A1A2E', color:'#A084C4', font:'Cinzel', icon:'💎', effect:'3d', frame:'diamond', iconPos:'top' },
+  { name:'Shield Strong', nameAr:'الدرع القوي', cat:'قوة', bg:'#0D0D0D', color:'#C4736B', font:'Cairo', icon:'⚔', effect:'shadow', frame:'shield', iconPos:'top' },
+  { name:'Arch Classic', nameAr:'الكلاسيكي القوسي', cat:'كلاسيك', bg:'#1C0A00', color:'#E8C96A', font:'Playfair Display', icon:'🏛', effect:'gradient', frame:'arch', iconPos:'top' },
+  { name:'Star Power', nameAr:'قوة النجمة', cat:'إبداعي', bg:'#050505', color:'#F5F5DC', font:'Cairo', icon:'★', effect:'glow', frame:'ornate', iconPos:'top' },
+  { name:'Nature Fresh', nameAr:'الطبيعي الطازج', cat:'طبيعي', bg:'#0A1628', color:'#4CAF9A', font:'Cairo', icon:'🌿', effect:'none', frame:'circle', iconPos:'left' },
+  { name:'Blue Ocean', nameAr:'المحيط الأزرق', cat:'مياه', bg:'#050a20', color:'#6B9AC4', font:'Cinzel', icon:'🔷', effect:'gradient', frame:'hex', iconPos:'top' },
+  { name:'Fire Brand', nameAr:'العلامة النارية', cat:'نشيط', bg:'#0D0D0D', color:'#C4736B', font:'Cairo', icon:'🔥', effect:'glow', frame:'none', iconPos:'right' },
+  { name:'Moon Silver', nameAr:'الفضي القمري', cat:'أنيق', bg:'#050505', color:'#C0C0C0', font:'Playfair Display', icon:'🌙', effect:'shadow', frame:'circle', iconPos:'top' },
+  { name:'Lion Crown', nameAr:'تاج الأسد', cat:'قيادة', bg:'#1C0A00', color:'#C9A84C', font:'Cinzel', icon:'🦁', effect:'3d', frame:'badge', iconPos:'top' },
+  { name:'Hex Matrix', nameAr:'المصفوفة', cat:'تقني', bg:'#0A1628', color:'#4CAF9A', font:'Arial Black', icon:'⬡', effect:'glow', frame:'double-line', iconPos:'top' },
+  { name:'Gold Fleur', nameAr:'زهرة الذهب', cat:'فاخر', bg:'#0D0D0D', color:'#E8C96A', font:'Playfair Display', icon:'⚜', effect:'gradient', frame:'ornate', iconPos:'top' },
+  { name:'Pure White', nameAr:'الأبيض النقي', cat:'بسيط', bg:'#FFFFFF', color:'#0D0D0D', font:'Cairo', icon:'◆', effect:'none', frame:'rect', iconPos:'left' },
+  { name:'Crimson', nameAr:'القرمزي', cat:'قوة', bg:'#1a0008', color:'#C0324F', font:'Cinzel', icon:'★', effect:'glow', frame:'shield', iconPos:'top' },
+  { name:'Emerald', nameAr:'الزمرد', cat:'نباتي', bg:'#001a0a', color:'#3CB371', font:'Cairo', icon:'🌿', effect:'gradient', frame:'arch', iconPos:'top' },
+  { name:'Aurora', nameAr:'الأورورا', cat:'جمالي', bg:'#0D0D0D', color:'#A084C4', font:'Playfair Display', icon:'⭕', effect:'glow', frame:'circle', iconPos:'top' },
+  { name:'Commander', nameAr:'القائد', cat:'قوة', bg:'#050505', color:'#B8860B', font:'Arial Black', icon:'⚔', effect:'3d', frame:'diamond', iconPos:'top' },
+  { name:'Minimalist', nameAr:'البسيط الأنيق', cat:'بسيط', bg:'#0D0D0D', color:'#C9A84C', font:'Cairo', icon:'—', effect:'none', frame:'none', iconPos:'hidden' },
+];
+
+function buildTemplates() {
+  const grid = document.getElementById('templatesGrid');
+  grid.innerHTML = '';
+  templates.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'template-card';
+    div.onclick = () => applyTemplate(t);
+
+    // Mini canvas preview
+    div.innerHTML = `
+      <div class="template-preview" style="background:${t.bg}">
+        <canvas id="tpl-${i}" width="240" height="140"></canvas>
+        <div class="template-use">✦ <span data-ar="تطبيق" data-en="Apply">تطبيق</span></div>
+      </div>
+      <div class="template-info">
+        <span class="template-name" data-ar="${t.nameAr}" data-en="${t.name}">${t.nameAr}</span>
+        <span class="template-tag">${t.cat}</span>
+      </div>`;
+    grid.appendChild(div);
+
+    // Render mini preview
+    setTimeout(()=>{
+      renderMini(`tpl-${i}`, t);
+    }, 50*i);
+  });
+}
+
+function renderMini(id, t) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=240, H=140;
+  ctx.clearRect(0,0,W,H);
+  if (t.bg !== 'transparent') { ctx.fillStyle=t.bg; ctx.fillRect(0,0,W,H); }
+
+  // Frame
+  const origState = {...state};
+  Object.assign(state, t);
+  state.canvasW=W; state.canvasH=H; state.textSize=28; state.spacing=10; state.text='Logo'; state.tagline='';
+  const saved = document.getElementById('logoCanvas');
+  // override
+  state.frame = t.frame;
+  drawFrame(ctx,W,H);
+
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  applyEffect(ctx);
+  if (t.iconPos!=='hidden') {
+    ctx.font = `32px serif`;
+    ctx.fillStyle=t.color;
+    ctx.fillText(t.icon, W/2, t.iconPos==='top'?H*0.35:H/2);
+  }
+  const ty = t.iconPos==='top'?H*0.68:H/2;
+  ctx.font=`900 28px '${t.font}', Cairo, serif`;
+  if (t.effect==='gradient') {
+    const g=ctx.createLinearGradient(W/2-60,ty,W/2+60,ty);
+    g.addColorStop(0,'#E8C96A'); g.addColorStop(0.5,t.color); g.addColorStop(1,'#8B6914');
+    ctx.fillStyle=g;
+  } else { ctx.fillStyle=t.color; }
+  ctx.fillText('Logo', W/2, ty);
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0;
+  Object.assign(state, origState);
+}
+
+function applyTemplate(t) {
+  Object.assign(state, t);
+  document.getElementById('logoText').value = state.text || 'شركتك';
+  document.getElementById('taglineText').value = state.tagline || '';
+  document.getElementById('textSize').value = 48;
+  document.getElementById('spacing').value = 16;
+  document.getElementById('sizeVal').textContent = 48;
+  document.getElementById('spacingVal').textContent = 16;
+  renderLogo();
+  document.getElementById('builder').scrollIntoView({behavior:'smooth'});
+}
+
+// ──────────────────────────────────────────────
+// Lang
+// ──────────────────────────────────────────────
+let currentLang = 'ar';
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-ar]').forEach(el => {
+    el.textContent = el.getAttribute(`data-${lang}`);
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase()===lang || (lang==='ar'&&btn.textContent.includes('عربي')) || (lang==='en'&&btn.textContent==='EN'));
+  });
+}
+
+// ──────────────────────────────────────────────
+// Init
+// ──────────────────────────────────────────────
+buildTemplates();
+renderLogo();
+</script>
+</body>
+</html>
