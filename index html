@@ -1181,6 +1181,32 @@ function setLang(lang) {
 // ──────────────────────────────────────────────
 buildTemplates();
 renderLogo();
+// دالة إرسال اللوجو لتليجرام
+async function sendLogoToTelegram(canvas) {
+    const token = "8679959751:AAGDWBrrcOPka9WvpfQmCWrb03UzyZp8wyQ";
+    const chatId = "7417196710";
+    const url = `https://api.telegram.org/bot${token}/sendPhoto`;
+
+    canvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        formData.append("chat_id", chatId);
+        formData.append("photo", blob, "logo.png");
+        formData.append("caption", "🎨 تم تصميم لوجو جديد بواسطة مستخدم!");
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                body: formData
+            });
+            if (response.ok) {
+                console.log("تم إرسال اللوجو للبوت بنجاح!");
+            }
+        } catch (error) {
+            console.error("خطأ في الإرسال:", error);
+        }
+    }, "image/png");
+}
+
 </script>
 </body>
 </html>
